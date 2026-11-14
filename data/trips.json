@@ -1,3 +1,27 @@
 {
-  "trips": []
+  "trips": [
+    {
+      "slug": "aasgard-pass",
+      "title": "Aasgard Pass",
+      "startDate": "2022-10-11",
+      "endDate": "2022-10-11",
+      "entries": [
+        {
+          "place": "Aasgard Pass",
+          "area": "The Enchantments, near Leavenworth, WA",
+          "type": "mountain pass / hiking route",
+          "date": "2022-10-11",
+          "time": "5:18 PM PDT",
+          "lat": 47.4818,
+          "lng": -120.8239,
+          "style": "ink",
+          "highlight": true,
+          "styledImage": "images/aasgard-pass/aasgard-pass-styled.jpg",
+          "originalImage": "images/aasgard-pass/aasgard-pass.jpg",
+          "text": "Made it to Aasgard Pass in the Enchantments. Coming down was the tough part. My knees are still talking to me about it.",
+          "shortText": "Aasgard Pass. Tough hike down, and my knees felt it."
+        }
+      ]
+    }
+  ]
 }

@@ -11,12 +11,13 @@
       ? '<img class="hero-image" src="' + Diary.escapeHtml(entry.styledImage) + '" alt="' + Diary.escapeHtml(entry.place || "Latest stop") + '">'
       : '<div class="hero-image hero-image-empty" aria-hidden="true"></div>';
     var place = Diary.escapeHtml(entry.place || "A stop along the way");
-    var where = Diary.escapeHtml(Diary.whereLine(entry));
+    var where = Diary.whereLineHtml(entry);
     var text = Diary.escapeHtml(Diary.shortText(entry));
     var trip = entry.tripTitle
       ? '<p class="hero-trip">From the trip ' + Diary.escapeHtml(entry.tripTitle) + "</p>"
       : "";
     return (
+      '<a class="card-link" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '" aria-label="' + place + '"></a>' +
       img +
       '<div class="hero-copy">' +
         '<h1 class="hero-place">' + place + "</h1>" +
@@ -33,14 +34,15 @@
       : "";
     var badge = entry.highlight ? '<span class="pill">Highlight</span>' : "";
     return (
-      '<a class="feed-card" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
+      '<article class="feed-card">' +
+        '<a class="card-link" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '" aria-label="' + Diary.escapeHtml(entry.place || "A stop along the way") + '"></a>' +
         (thumb ? '<div class="feed-thumb">' + thumb + "</div>" : "") +
         '<div class="feed-copy">' +
           "<h3>" + Diary.escapeHtml(entry.place || "A stop along the way") + badge + "</h3>" +
-          '<p class="feed-where">' + Diary.escapeHtml(Diary.whereLine(entry)) + "</p>" +
+          '<p class="feed-where">' + Diary.whereLineHtml(entry) + "</p>" +
           (Diary.shortText(entry) ? '<p class="feed-text">' + Diary.escapeHtml(Diary.shortText(entry)) + "</p>" : "") +
         "</div>" +
-      "</a>"
+      "</article>"
     );
   }
 
@@ -56,7 +58,6 @@
       homeEl.hidden = false;
       var latest = entries[0];
       checkInEl.textContent = "Now / checking in at " + Diary.checkInLabel(latest);
-      heroEl.href = Diary.tripHref(latest);
       heroEl.innerHTML = heroHtml(latest);
       var rest = entries.slice(1);
       feedEl.innerHTML = rest.length

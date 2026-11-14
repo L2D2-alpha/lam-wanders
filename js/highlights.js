@@ -4,20 +4,28 @@
   var rootEl = document.getElementById("highlights");
   var timelineEl = document.getElementById("timeline");
 
+  function highlightWhere(entry) {
+    var loc = Diary.escapeHtml(Diary.locationLabel(entry));
+    var link = Diary.mapsLink(entry);
+    var line = [loc, link].filter(Boolean).join(" · ");
+    return line ? '<p class="timeline-city">' + line + "</p>" : "";
+  }
+
   function highlightCard(entry) {
     var thumb = entry.styledImage
       ? '<img src="' + Diary.escapeHtml(entry.styledImage) + '" alt="' + Diary.escapeHtml(entry.place || "Highlight") + '" loading="lazy">'
       : "";
     return (
-      '<a class="timeline-card" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
+      '<article class="timeline-card">' +
+        '<a class="card-link" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '" aria-label="' + Diary.escapeHtml(entry.place || "A favorite stop") + '"></a>' +
         (thumb ? '<div class="timeline-thumb">' + thumb + "</div>" : "") +
         '<div class="timeline-copy">' +
           '<p class="timeline-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</p>" +
           "<h3>" + Diary.escapeHtml(entry.place || "A favorite stop") + "</h3>" +
-          (entry.city ? '<p class="timeline-city">' + Diary.escapeHtml(entry.city) + "</p>" : "") +
+          highlightWhere(entry) +
           (Diary.shortText(entry) ? '<p class="timeline-text">' + Diary.escapeHtml(Diary.shortText(entry)) + "</p>" : "") +
         "</div>" +
-      "</a>"
+      "</article>"
     );
   }
 

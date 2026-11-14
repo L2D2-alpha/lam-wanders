@@ -114,13 +114,42 @@
     return cut;
   }
 
+  function locationLabel(entry) {
+    if (!entry) return "";
+    return entry.area || entry.city || "";
+  }
+
   function whereLine(entry) {
-    return [entry.city, formatDate(entry.date)].filter(Boolean).join(" · ");
+    return [locationLabel(entry), formatDate(entry && entry.date)].filter(Boolean).join(" · ");
+  }
+
+  function entryCoords(entry) {
+    if (!entry) return null;
+    var lat = Number(entry.lat);
+    var lng = Number(entry.lng);
+    if (!isFinite(lat) || !isFinite(lng)) return null;
+    return { lat: lat, lng: lng };
+  }
+
+  function mapsLink(entry) {
+    var coords = entryCoords(entry);
+    if (!coords) return "";
+    var label = coords.lat.toFixed(4) + ", " + coords.lng.toFixed(4);
+    var href = "https://www.google.com/maps?q=" + coords.lat.toFixed(4) + "," + coords.lng.toFixed(4);
+    return '<a class="maps-link" href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' + escapeHtml(label) + "</a>";
+  }
+
+  function whereLineHtml(entry) {
+    var line = escapeHtml(whereLine(entry));
+    var link = mapsLink(entry);
+    if (line && link) return line + " · " + link;
+    return line || link;
   }
 
   function checkInLabel(entry) {
     var place = entry.place || "a new stop";
-    return entry.city ? place + ", " + entry.city : place;
+    var loc = locationLabel(entry);
+    return loc ? place + ", " + loc : place;
   }
 
   function tripHref(entry) {
@@ -160,7 +189,8 @@
       (trip.entries || []).forEach(function (entry) {
         if (yearOf(entry.date) !== year) return;
         stops += 1;
-        if (entry.city) cities[String(entry.city).trim().toLowerCase()] = true;
+        var loc = entry.city || entry.area;
+        if (loc) cities[String(loc).trim().toLowerCase()] = true;
       });
     });
     return {
@@ -207,7 +237,11 @@
     entryId: entryId,
     flattenEntries: flattenEntries,
     shortText: shortText,
+    locationLabel: locationLabel,
     whereLine: whereLine,
+    entryCoords: entryCoords,
+    mapsLink: mapsLink,
+    whereLineHtml: whereLineHtml,
     checkInLabel: checkInLabel,
     tripHref: tripHref,
     loadTrips: loadTrips,

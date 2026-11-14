@@ -6,9 +6,10 @@
 
   function stopItem(entry) {
     var place = Diary.escapeHtml(entry.place || "A stop along the way");
-    var city = entry.city ? '<span class="stop-city">' + Diary.escapeHtml(entry.city) + "</span>" : "";
+    var loc = Diary.locationLabel(entry);
+    var city = loc ? '<span class="stop-city">' + Diary.escapeHtml(loc) + "</span>" : "";
     var date = '<span class="stop-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</span>";
-    var sep = entry.city ? ", " : "";
+    var sep = loc ? ", " : "";
     return "<li>" + date + '<span class="stop-place">' + place + "</span>" + sep + city + "</li>";
   }
 
