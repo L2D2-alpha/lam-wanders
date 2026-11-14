@@ -90,8 +90,14 @@
                   <path filter="url(#ink-bleed)" fill="currentColor" d="M0 18 C 40 12, 90 14, 160 15 S 300 20, 420 16 S 600 12, 720 17 S 900 21, 1000 15 L 1000 19 C 900 25, 820 22, 720 21 S 560 17, 420 21 S 260 25, 160 20 S 40 24, 0 21 Z"/>
                   <path fill="currentColor" opacity=".35" d="M0 16 C 200 14, 400 19, 600 15 S 860 13, 1000 17 L1000 17.6 C 860 15, 600 17, 400 20.4 S 200 16, 0 17.2 Z"/>
                 </svg>
-                <svg class="v" style="display:none" viewBox="0 0 28 1000" preserveAspectRatio="none" aria-hidden="true">
-                  <path filter="url(#ink-bleed)" fill="currentColor" d="M12 0 C 10 120, 15 260, 13 400 S 11 700, 14 1000 L 17 1000 C 15 700, 18 520, 16 400 S 13 120, 16 0 Z"/>
+                <svg class="v" style="display:none" viewBox="0 0 28 2000" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <filter id="ink-soft-v" x="-40%" y="-1%" width="180%" height="102%">
+                      <feGaussianBlur stdDeviation="0.4 0.12"/>
+                    </filter>
+                  </defs>
+                  <path filter="url(#ink-soft-v)" fill="currentColor" d="M12.6 0 C 11.8 220, 15.4 440, 13.4 700 S 11.6 1180, 13.8 1540 S 15.2 1820, 13 2000 L 16.4 2000 C 18.2 1820, 16.8 1540, 16.6 1180 S 16.6 440, 16.2 0 Z"/>
+                  <path fill="currentColor" opacity=".28" d="M13.4 0 C 12.8 260, 14.8 520, 13.8 860 S 12.8 1400, 14.2 2000 L 15.4 2000 C 14.2 1400, 15 860, 15 520 S 14.8 260, 15.2 0 Z"/>
                 </svg>
               </div>
             </div>

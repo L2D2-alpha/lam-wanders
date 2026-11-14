@@ -98,7 +98,7 @@ body::after {
 }
 
 .page { position: relative; z-index: 1; }
-body:not([data-page="home"]):not([data-page="entry"]) .page {
+body:not([data-page="home"]):not([data-page="entry"]) main {
   width: min(960px, calc(100% - 2rem));
   margin: 0 auto;
   padding: var(--space-5) 0 var(--space-7);
@@ -121,10 +121,6 @@ a { color: var(--indigo); }
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
-  margin-bottom: var(--space-5);
-}
-body[data-page="home"] .site-header,
-body[data-page="entry"] .site-header {
   padding: var(--space-5) clamp(1rem, 4vw, 3.5rem);
   margin-bottom: 0;
 }
@@ -173,15 +169,11 @@ body[data-page="entry"] .site-header {
 .site-nav a[aria-current="page"] { background: var(--ink); color: var(--card); }
 
 .site-footer {
-  margin-top: var(--space-7);
+  margin-top: 0;
   text-align: center;
   color: var(--ink-60);
   font-size: var(--step--1);
-}
-body[data-page="home"] .site-footer,
-body[data-page="entry"] .site-footer {
   padding: var(--space-7) clamp(1rem, 4vw, 3.5rem);
-  margin-top: 0;
 }
 
 .seal {
@@ -541,9 +533,7 @@ body[data-page="entry"] .site-footer {
 }
 
 @media (max-width: 699px) {
-  .site-header { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
-  body[data-page="home"] .site-header,
-  body[data-page="entry"] .site-header { padding-bottom: var(--space-3); }
+  .site-header { flex-direction: column; align-items: flex-start; gap: var(--space-3); padding-bottom: var(--space-3); }
   .mascot { width: 58px; height: 58px; }
   .site-nav { flex-wrap: wrap; }
   .timeline-scroller { height: auto !important; }
@@ -618,19 +608,31 @@ body[data-page="entry"] .site-footer {
 body[data-page="entry"] .page {
   width: 100%;
   max-width: none;
-  padding: var(--space-5) 0 var(--space-7);
+  padding: 0 0 var(--space-7);
 }
-body[data-page="entry"] .site-header,
-body[data-page="entry"] .site-footer,
 body[data-page="entry"] .back,
 body[data-page="entry"] .entry-hero,
 body[data-page="entry"] .photos,
 body[data-page="entry"] .hero-stroke,
 body[data-page="entry"] .map-wrap,
-body[data-page="entry"] .entry-text,
 body[data-page="entry"] .empty-state {
   padding-left: clamp(1rem, 4vw, 3.5rem);
   padding-right: clamp(1rem, 4vw, 3.5rem);
+  max-width: 1320px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+body[data-page="entry"] .entry-text {
+  box-sizing: border-box;
+  width: auto;
+  max-width: min(40rem, calc(100% - 2 * clamp(1rem, 4vw, 3.5rem)));
+  margin-top: var(--space-5);
+  margin-left: max(clamp(1rem, 4vw, 3.5rem), calc((100% - min(100%, 1320px)) / 2 + clamp(1rem, 4vw, 3.5rem)));
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
 }
 .back a {
   display: inline-flex;
@@ -696,27 +698,23 @@ body[data-page="entry"] .empty-state {
 .hero-stroke {
   display: block;
   height: 18px;
-  width: calc(100% - 2 * clamp(1rem, 4vw, 3.5rem));
-  max-width: 1240px;
+  width: 100%;
   color: var(--ink);
-  margin: 0 auto;
 }
 .entry-trip { margin: var(--space-3) 0 0; color: var(--indigo); font-weight: 600; }
 .entry-text {
-  margin: var(--space-5) auto 0;
-  max-width: 40rem;
+  margin: var(--space-5) 0 0;
   font-size: var(--step-0);
   white-space: pre-wrap;
 }
-body[data-page="entry"] .entry-text { margin-left: clamp(1rem, 4vw, 3.5rem); }
 
 .photos {
-  columns: 3 300px;
-  column-gap: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: var(--space-5);
   padding-top: var(--space-6);
-  margin: 0 auto;
 }
-.photo-frame { break-inside: avoid; margin: 0 0 var(--space-5); position: relative; }
+.photo-frame { margin: 0; position: relative; }
 .photo-frame button {
   all: unset;
   display: block;
@@ -813,11 +811,10 @@ body[data-page="entry"] .map-wrap { margin-top: var(--space-6); }
   .entry-hero, .trip-hero { grid-template-columns: 1fr; }
   .entry-hero .accent, .trip-hero .accent { order: -1; }
   .entry-hero .seal, .trip-hero .seal { width: 40px; height: 40px; }
-  .photos { columns: 2 150px; column-gap: var(--space-3); }
-  .photo-frame { margin-bottom: var(--space-4); }
+  .photos { gap: var(--space-4); }
   .photo-frame figcaption { flex-direction: column; gap: 0; }
   .map { height: 260px; }
-  body:not([data-page="home"]):not([data-page="entry"]) .page { width: min(960px, calc(100% - 1.25rem)); }
+  body:not([data-page="home"]):not([data-page="entry"]) main { width: min(960px, calc(100% - 1.25rem)); }
 }
 
 .maps-link {
