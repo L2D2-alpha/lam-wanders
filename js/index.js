@@ -1,49 +1,70 @@
+
 (function () {
   var emptyEl = document.getElementById("empty-state");
-  var tripsEl = document.getElementById("trips");
+  var homeEl = document.getElementById("home");
+  var checkInEl = document.getElementById("check-in");
+  var heroEl = document.getElementById("hero");
+  var feedEl = document.getElementById("feed");
 
-  function stopItem(entry) {
+  function heroHtml(entry) {
+    var img = entry.styledImage
+      ? '<img class="hero-image" src="' + Diary.escapeHtml(entry.styledImage) + '" alt="' + Diary.escapeHtml(entry.place || "Latest stop") + '">'
+      : '<div class="hero-image hero-image-empty" aria-hidden="true"></div>';
     var place = Diary.escapeHtml(entry.place || "A stop along the way");
-    var city = entry.city ? '<span class="stop-city">' + Diary.escapeHtml(entry.city) + "</span>" : "";
-    var date = '<span class="stop-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</span>";
-    var sep = entry.city ? ", " : "";
-    return "<li>" + date + '<span class="stop-place">' + place + "</span>" + sep + city + "</li>";
-  }
-
-  function tripCard(trip) {
-    var slug = encodeURIComponent(trip.slug || "");
-    var title = Diary.escapeHtml(trip.title || "Untitled trip");
-    var entries = Diary.sortEntries(trip.entries);
-    var dates = Diary.tripDates(trip);
-    var count = entries.length;
-    var stopWord = count === 1 ? "stop" : "stops";
-    var meta = [dates, count ? count + " " + stopWord : "No stops yet"].filter(Boolean).join(" · ");
-    var stops = entries.length
-      ? '<ul class="stop-list">' + entries.map(stopItem).join("") + "</ul>"
+    var where = Diary.escapeHtml(Diary.whereLine(entry));
+    var text = Diary.escapeHtml(Diary.shortText(entry));
+    var trip = entry.tripTitle
+      ? '<p class="hero-trip">From the trip ' + Diary.escapeHtml(entry.tripTitle) + "</p>"
       : "";
     return (
-      '<a class="trip-card" href="trip.html?trip=' + slug + '">' +
-        "<h2>" + title + "</h2>" +
-        '<p class="trip-meta">' + Diary.escapeHtml(meta) + "</p>" +
-        stops +
+      img +
+      '<div class="hero-copy">' +
+        '<h1 class="hero-place">' + place + "</h1>" +
+        (where ? '<p class="hero-where">' + where + "</p>" : "") +
+        (text ? '<p class="hero-text">' + text + "</p>" : "") +
+        trip +
+      "</div>"
+    );
+  }
+
+  function feedCard(entry) {
+    var thumb = entry.styledImage
+      ? '<img src="' + Diary.escapeHtml(entry.styledImage) + '" alt="' + Diary.escapeHtml(entry.place || "Stop") + '" loading="lazy">'
+      : "";
+    var badge = entry.highlight ? '<span class="pill">Highlight</span>' : "";
+    return (
+      '<a class="feed-card" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
+        (thumb ? '<div class="feed-thumb">' + thumb + "</div>" : "") +
+        '<div class="feed-copy">' +
+          "<h3>" + Diary.escapeHtml(entry.place || "A stop along the way") + badge + "</h3>" +
+          '<p class="feed-where">' + Diary.escapeHtml(Diary.whereLine(entry)) + "</p>" +
+          (Diary.shortText(entry) ? '<p class="feed-text">' + Diary.escapeHtml(Diary.shortText(entry)) + "</p>" : "") +
+        "</div>" +
       "</a>"
     );
   }
 
   Diary.loadTrips()
     .then(function (trips) {
-      var list = Diary.sortTrips(trips).filter(function (t) { return t && t.slug; });
-      if (!list.length) {
+      var entries = Diary.sortEntriesNewest(Diary.flattenEntries(trips));
+      if (!entries.length) {
         emptyEl.hidden = false;
-        tripsEl.hidden = true;
+        homeEl.hidden = true;
         return;
       }
       emptyEl.hidden = true;
-      tripsEl.hidden = false;
-      tripsEl.innerHTML = list.map(tripCard).join("");
+      homeEl.hidden = false;
+      var latest = entries[0];
+      checkInEl.textContent = "Now / checking in at " + Diary.checkInLabel(latest);
+      heroEl.href = Diary.tripHref(latest);
+      heroEl.innerHTML = heroHtml(latest);
+      var rest = entries.slice(1);
+      feedEl.innerHTML = rest.length
+        ? rest.map(feedCard).join("")
+        : '<p class="feed-empty">That is the only page in the diary so far.</p>';
     })
     .catch(function () {
       emptyEl.hidden = false;
-      tripsEl.hidden = true;
+      homeEl.hidden = true;
     });
 })();

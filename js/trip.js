@@ -1,3 +1,4 @@
+
 (function () {
   var params = new URLSearchParams(location.search);
   var slug = params.get("trip") || params.get("slug") || "";
@@ -10,28 +11,19 @@
     document.title = "Trip not found — Lam Wanders";
   }
 
-  function photoFigure(src, kind, label) {
-    if (!src) return "";
-    return (
-      '<figure class="photo-frame ' + kind + '">' +
-        '<img src="' + Diary.escapeHtml(src) + '" alt="' + Diary.escapeHtml(label) + '" loading="lazy">' +
-        "<figcaption>" + (kind === "styled" ? "Styled" : "Original") + "</figcaption>" +
-      "</figure>"
-    );
-  }
-
-  function entryHtml(entry) {
+  function entryHtml(entry, trip) {
     var place = entry.place || "A stop along the way";
     var bits = [];
     if (entry.city) bits.push(entry.city);
     if (entry.date) bits.push(Diary.formatDate(entry.date));
-    var photos = photoFigure(entry.styledImage, "styled", place + " (styled)") +
-      photoFigure(entry.originalImage, "original", place + " (original)");
+    var photos = Diary.photoFigure(entry.styledImage, "styled", place + " (styled)") +
+      Diary.photoFigure(entry.originalImage, "original", place + " (original)");
     var text = entry.text || entry.caption || "";
+    var badge = entry.highlight ? '<span class="pill">Highlight</span>' : "";
     return (
-      '<article class="entry">' +
+      '<article class="entry" id="' + Diary.escapeHtml(Diary.entryId(entry, trip)) + '">' +
         '<header class="entry-header">' +
-          '<h2 class="entry-place">' + Diary.escapeHtml(place) + "</h2>" +
+          '<h2 class="entry-place">' + Diary.escapeHtml(place) + badge + "</h2>" +
           (bits.length ? '<p class="entry-where">' + Diary.escapeHtml(bits.join(" · ")) + "</p>" : "") +
         "</header>" +
         (photos ? '<div class="photos">' + photos + "</div>" : "") +
@@ -105,9 +97,13 @@
         summaryEl.textContent = trip.summary;
       }
       document.getElementById("entries").innerHTML = entries.length
-        ? entries.map(entryHtml).join("")
+        ? entries.map(function (entry) { return entryHtml(entry, trip); }).join("")
         : '<p class="trip-summary">No entries on this trip yet.</p>';
       drawMap(entries);
+      if (location.hash) {
+        var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if (target) target.scrollIntoView();
+      }
     })
     .catch(showMissing);
 })();

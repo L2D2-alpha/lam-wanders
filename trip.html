@@ -14,12 +14,12 @@
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
-
   <title>Trip — Lam Wanders</title>
   <meta name="description" content="A trip in Lam Wanders, a travel diary kept by Spring Roll.">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+
 </head>
-<body>
+<body data-page="trips">
   <div class="page">
     <header class="site-header">
       <a class="brand" href="index.html">
@@ -48,14 +48,20 @@
           <span class="tagline">a travel diary kept by Spring Roll</span>
         </span>
       </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="highlights.html" data-nav="highlights">Highlights</a>
+        <a href="trips.html" data-nav="trips">Trips</a>
+        <a href="about.html" data-nav="about">About</a>
+      </nav>
     </header>
 
     <main>
-      <p class="back"><a href="index.html">← All trips</a></p>
+      <p class="back"><a href="trips.html">← All trips</a></p>
       <section id="trip-missing" class="empty-state" hidden>
         <div class="empty-card">
           <h1>This page wandered off</h1>
-          <p>That trip is not in the diary yet. <a href="index.html">Back to all trips</a>.</p>
+          <p>That trip is not in the diary yet. <a href="trips.html">Back to all trips</a>.</p>
         </div>
       </section>
       <article id="trip" hidden>
@@ -70,6 +76,7 @@
         </section>
         <section class="entries" id="entries"></section>
       </article>
+
     </main>
     <footer class="site-footer">
       <p>Kept with care by Spring Roll.</p>
