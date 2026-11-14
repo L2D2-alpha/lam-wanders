@@ -327,6 +327,13 @@
     );
   }
 
+
+  var SEAL_MARKUP = '<span class="seal" aria-hidden="true"><svg viewBox="0 0 40 40"><use href="#seal-lt"/></svg></span>';
+
+  function sealHtml() {
+    return SEAL_MARKUP;
+  }
+
   document.querySelectorAll(".site-nav a").forEach(function (link) {
     if (link.getAttribute("data-nav") === document.body.getAttribute("data-page")) {
       link.setAttribute("aria-current", "page");
@@ -366,33 +373,52 @@
     yearStats: yearStats,
     statLine: statLine,
     yearStatLine: yearStatLine,
-    photoFigure: photoFigure
+    photoFigure: photoFigure,
+    sealHtml: sealHtml
   };
 
   function injectFilters() {
-    if (document.getElementById("deckle")) return;
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "0");
-    svg.setAttribute("height", "0");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-    svg.style.position = "absolute";
-    svg.innerHTML =
-      '<defs>' +
-        '<filter id="deckle" x="-5%" y="-5%" width="110%" height="110%">' +
-          '<feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="t"/>' +
-          '<feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G"/>' +
-        '</filter>' +
-        '<filter id="rough-edge" x="-10%" y="-10%" width="120%" height="120%">' +
-          '<feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" result="t"/>' +
-          '<feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>' +
-        '</filter>' +
-        '<filter id="ink-bleed" x="-2%" y="-40%" width="104%" height="180%">' +
-          '<feTurbulence type="fractalNoise" baseFrequency="0.02 0.4" numOctaves="3" seed="11" result="t"/>' +
-          '<feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>' +
-        '</filter>' +
-      '</defs>';
-    document.body.insertBefore(svg, document.body.firstChild);
+    if (!document.getElementById("deckle")) {
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", "0");
+      svg.setAttribute("height", "0");
+      svg.setAttribute("aria-hidden", "true");
+      svg.setAttribute("focusable", "false");
+      svg.style.position = "absolute";
+      svg.innerHTML =
+        '<defs>' +
+          '<filter id="deckle" x="-5%" y="-5%" width="110%" height="110%">' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="t"/>' +
+            '<feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G"/>' +
+          '</filter>' +
+          '<filter id="rough-edge" x="-10%" y="-10%" width="120%" height="120%">' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" result="t"/>' +
+            '<feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>' +
+          '</filter>' +
+          '<filter id="ink-bleed" x="-2%" y="-40%" width="104%" height="180%">' +
+            '<feTurbulence type="fractalNoise" baseFrequency="0.02 0.4" numOctaves="3" seed="11" result="t"/>' +
+            '<feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>' +
+          '</filter>' +
+        '</defs>';
+      document.body.insertBefore(svg, document.body.firstChild);
+    }
+    if (!document.getElementById("seal-lt")) {
+      var host = document.getElementById("deckle") && document.getElementById("deckle").closest("defs");
+      if (!host) return;
+      host.insertAdjacentHTML("beforeend",
+        '<symbol id="seal-lt" viewBox="0 0 40 40">' +
+          '<rect x="1" y="1" width="38" height="38" rx="3" fill="#b0242a"/>' +
+          '<rect x="4.2" y="4.2" width="31.6" height="31.6" rx="1.2" fill="none" stroke="#fbf6ec" stroke-width="1.5"/>' +
+          '<g fill="none" stroke="#fbf6ec" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">' +
+            '<path d="M10.5 9.5 V28.2 Q10.5 30 12.3 30 H18.4 V26.6"/>' +
+            '<path d="M20.8 13 V10 H31.4 V13"/>' +
+            '<path d="M26.1 10 V30.4"/>' +
+          '</g>' +
+          '<rect x="16" y="3.2" width="2.4" height="2.2" fill="#b0242a"/>' +
+          '<rect x="34.6" y="21" width="2.2" height="2.6" fill="#b0242a"/>' +
+        '</symbol>'
+      );
+    }
   }
 
   if (document.readyState === "loading") {

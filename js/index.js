@@ -10,7 +10,7 @@
   function yearHtml(year, stats) {
     return (
       '<div class="home-year" id="y' + year + '">' +
-        "<h2>" + year + '<span class="seal" aria-hidden="true">旅</span></h2>' +
+        "<h2>" + year + Diary.sealHtml() + "</h2>" +
         '<span class="year-stats">' + Diary.escapeHtml(Diary.yearStatLine(stats)) + "</span>" +
       "</div>"
     );
@@ -43,7 +43,7 @@
             '<span class="tile-place">' + Diary.escapeHtml(place) + "</span>" +
             (text ? '<span class="tile-text">' + Diary.escapeHtml(text) + "</span>" : "") +
           "</span>" +
-          '<span class="seal visited-stamp" aria-hidden="true">旅</span>' +
+          Diary.sealHtml().replace('class="seal"', 'class="seal visited-stamp"') +
           '<span class="visually-hidden"></span>' +
         "</a>" +
       "</article>"

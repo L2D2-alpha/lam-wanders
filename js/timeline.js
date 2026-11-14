@@ -28,7 +28,11 @@
 
   function update() {
     ticking = false;
-    if (!active()) { document.body.classList.remove("is-pinned"); return; }
+    if (!active()) {
+      document.body.classList.remove("is-pinned");
+      markYear();
+      return;
+    }
     var top = scroller.getBoundingClientRect().top;
     document.body.classList.toggle("is-pinned", top <= 0 && top > -distance);
     var x = progress() * distance;
@@ -37,17 +41,31 @@
       var depth = parseFloat(layer.getAttribute("data-depth") || "0.15");
       layer.style.transform = "translate3d(" + (x * depth) + "px,0,0)";
     });
+    markYear();
   }
 
   function markYear() {
+    jumps = Array.prototype.slice.call(document.querySelectorAll(".year-jump a"));
     if (!jumps.length) return;
-    var mid = window.innerWidth / 2, current = null;
-    jumps.forEach(function (link) {
+    var mid = window.innerWidth / 2;
+    var current = null;
+    jumps.forEach(function (link, index) {
       var target = document.querySelector(link.getAttribute("href"));
-      if (target && target.getBoundingClientRect().left < mid) current = link;
+      if (!target) return;
+      var next = jumps[index + 1] && document.querySelector(jumps[index + 1].getAttribute("href"));
+      var left = target.getBoundingClientRect().left;
+      var right = next ? next.getBoundingClientRect().left : Infinity;
+      if (left <= mid && mid < right) current = link;
     });
+    if (!current) {
+      var first = document.querySelector(jumps[0].getAttribute("href"));
+      var last = document.querySelector(jumps[jumps.length - 1].getAttribute("href"));
+      if (last && last.getBoundingClientRect().left <= mid) current = jumps[jumps.length - 1];
+      else if (first && first.getBoundingClientRect().left > mid) current = jumps[0];
+      else current = jumps[0];
+    }
     jumps.forEach(function (link) {
-      link.setAttribute("aria-current", link === (current || jumps[0]) ? "true" : "false");
+      link.setAttribute("aria-current", link === current ? "true" : "false");
     });
   }
 
@@ -65,7 +83,6 @@
 
   function bind() {
     window.addEventListener("scroll", function () {
-      requestAnimationFrame(markYear);
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
     window.addEventListener("resize", measure);

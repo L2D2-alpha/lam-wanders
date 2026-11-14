@@ -42,7 +42,7 @@
   function pinIcon() {
     return L.divIcon({
       className: "clay-pin",
-      html: '<svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 1c7.2 0 13 5.7 13 12.8 0 9.2-13 21.2-13 21.2S1 23 1 13.8C1 6.7 6.8 1 14 1z" fill="#c45c3e" stroke="#9a3f28" stroke-width="1.2"/><circle cx="14" cy="13.5" r="5.2" fill="#f6efe4"/></svg>',
+      html: '<svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 1c7.2 0 13 5.7 13 12.8 0 9.2-13 21.2-13 21.2S1 23 1 13.8C1 6.7 6.8 1 14 1z" fill="#b5432b" stroke="#8a2e1c" stroke-width="1.2"/><circle cx="14" cy="13.5" r="5.2" fill="#fbf6ec"/></svg>',
       iconSize: [28, 36],
       iconAnchor: [14, 36],
       popupAnchor: [0, -30]

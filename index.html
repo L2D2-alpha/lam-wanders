@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6efe4">
+  <meta name="theme-color" content="#f4ecdc">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script>
     (function () {
@@ -13,34 +13,43 @@
       }
     })();
   </script>
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
   <title>Lam Wanders</title>
   <meta name="description" content="Lam Wanders, a travel diary kept by Spring Roll.">
 </head>
 <body data-page="home">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="deckle" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="rough-edge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>
+    </filter>
+    <filter id="ink-bleed" x="-2%" y="-40%" width="104%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.4" numOctaves="3" seed="11" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>
+    </filter>
+    <symbol id="seal-lt" viewBox="0 0 40 40">
+      <rect x="1" y="1" width="38" height="38" rx="3" fill="#b0242a"/>
+      <rect x="4.2" y="4.2" width="31.6" height="31.6" rx="1.2" fill="none" stroke="#fbf6ec" stroke-width="1.5"/>
+      <g fill="none" stroke="#fbf6ec" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+        <path d="M10.5 9.5 V28.2 Q10.5 30 12.3 30 H18.4 V26.6"/>
+        <path d="M20.8 13 V10 H31.4 V13"/>
+        <path d="M26.1 10 V30.4"/>
+      </g>
+      <rect x="16" y="3.2" width="2.4" height="2.2" fill="#b0242a"/>
+      <rect x="34.6" y="21" width="2.2" height="2.6" fill="#b0242a"/>
+    </symbol>
+  </defs>
+</svg>
   <div class="page page-home">
     <header class="site-header">
       <a class="brand" href="index.html">
-        <svg class="mascot" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <ellipse cx="60" cy="104" rx="32" ry="7" fill="#e4d5c3"/>
-  <rect x="78" y="70" width="26" height="22" rx="4" fill="#8b5e3c"/>
-  <rect x="82" y="64" width="18" height="8" rx="3" fill="#c45c3e"/>
-  <rect x="86" y="76" width="10" height="7" rx="1.5" fill="#e8b86d"/>
-  <path d="M18 62c6-32 78-32 84 0-6 28-78 28-84 0z" fill="#d4893a"/>
-  <path d="M24 60c5-22 67-22 72 0-5 18-67 18-72 0z" fill="#e4a04a"/>
-  <path d="M30 58c4-12 56-12 60 0" fill="none" stroke="#f6e2b8" stroke-width="3" stroke-linecap="round"/>
-  <path d="M36 50c8-16 40-16 48 2" fill="none" stroke="#c45c3e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
-  <circle cx="48" cy="58" r="4.2" fill="#2f241c"/>
-  <circle cx="72" cy="58" r="4.2" fill="#2f241c"/>
-  <circle cx="49.3" cy="56.6" r="1.3" fill="#fffaf3"/>
-  <circle cx="73.3" cy="56.6" r="1.3" fill="#fffaf3"/>
-  <path d="M54 66c4 5 12 5 16 0" fill="none" stroke="#2f241c" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M28 64c-6 2-10 8-8 12 3 2 8-1 10-6" fill="#6b8f71"/>
-  <circle cx="92" cy="44" r="10" fill="#7ea8b0"/>
-  <circle cx="92" cy="44" r="5.5" fill="#f6efe4"/>
-  <path d="M92 30v4M92 54v4M78 44h4M102 44h4" stroke="#5a4638" stroke-width="2" stroke-linecap="round"/>
-</svg>
-
+        <span class="seal" aria-hidden="true"><svg viewBox="0 0 40 40"><use href="#seal-lt"/></svg></span>
         <span class="brand-text">
           <span class="title">Lam Wanders</span>
           <span class="tagline">a travel diary kept by Spring Roll</span>
@@ -63,6 +72,7 @@
       </section>
       <section id="home" hidden>
         <section class="timeline-intro">
+          <span class="callig" lang="vi" aria-hidden="true">Đi</span>
           <h1>Every stop, in order.</h1>
           <p>Scroll to walk through the years. Pick a day to open all of its photos.</p>
         </section>
