@@ -19,7 +19,7 @@
 
 </head>
 <body data-page="home">
-  <div class="page">
+  <div class="page page-home">
     <header class="site-header">
       <a class="brand" href="index.html">
         <svg class="mascot" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -83,10 +83,17 @@
         </div>
       </section>
       <section id="home" hidden>
-        <p class="check-in" id="check-in"></p>
-        <article class="hero-card" id="hero"></article>
-        <h2 class="feed-heading">Recent pages</h2>
-        <div class="feed" id="feed"></div>
+        <div class="htimeline-pin" id="timeline-pin">
+          <div class="htimeline-sticky" id="timeline-sticky">
+            <div class="htimeline-top">
+              <p class="check-in" id="check-in"></p>
+              <p class="htimeline-hint" id="timeline-hint" hidden></p>
+            </div>
+            <div class="htimeline-viewport" id="timeline-viewport">
+              <div class="htimeline-track" id="timeline-track" role="list"></div>
+            </div>
+          </div>
+        </div>
       </section>
 
     </main>

@@ -12,20 +12,29 @@
   }
 
   function entryHtml(entry, trip) {
-    var place = entry.place || "A stop along the way";
-    var where = Diary.whereLineHtml(entry);
-    var photos = Diary.photoFigure(entry.styledImage, "styled", place + " (styled)") +
-      Diary.photoFigure(entry.originalImage, "original", place + " (original)");
-    var text = entry.text || entry.caption || "";
-    var badge = entry.highlight ? '<span class="pill">Highlight</span>' : "";
+    var decorated = Diary.decorateEntry(entry, trip);
+    var place = decorated.place || "A stop along the way";
+    var where = Diary.whereLineHtml(decorated);
+    var href = Diary.entryHref(decorated);
+    var cover = Diary.coverImage(decorated);
+    var count = Diary.entryPhotos(decorated).length;
+    var text = decorated.text || decorated.caption || "";
+    var badge = decorated.highlight ? '<span class="pill">Highlight</span>' : "";
+    var moreLabel = count > 1 ? "Open this stop · " + count + " photos" : "Open this stop";
+    var preview = cover
+      ? '<a class="entry-preview" href="' + Diary.escapeHtml(href) + '">' +
+          '<img src="' + Diary.escapeHtml(cover) + '" alt="' + Diary.escapeHtml(place) + '">' +
+        "</a>"
+      : "";
     return (
-      '<article class="entry" id="' + Diary.escapeHtml(Diary.entryId(entry, trip)) + '">' +
+      '<article class="entry" id="' + Diary.escapeHtml(decorated.entryId) + '">' +
         '<header class="entry-header">' +
-          '<h2 class="entry-place">' + Diary.escapeHtml(place) + badge + "</h2>" +
+          '<h2 class="entry-place"><a href="' + Diary.escapeHtml(href) + '">' + Diary.escapeHtml(place) + "</a>" + badge + "</h2>" +
           (where ? '<p class="entry-where">' + where + "</p>" : "") +
         "</header>" +
-        (photos ? '<div class="photos">' + photos + "</div>" : "") +
+        preview +
         (text ? '<p class="entry-text">' + Diary.escapeHtml(text) + "</p>" : "") +
+        '<p class="entry-more"><a href="' + Diary.escapeHtml(href) + '">' + Diary.escapeHtml(moreLabel) + "</a></p>" +
       "</article>"
     );
   }
@@ -59,8 +68,10 @@
     var bounds = [];
     points.forEach(function (e) {
       var marker = L.marker([e.lat, e.lng], { icon: icon }).addTo(map);
-      var label = Diary.escapeHtml(e.place || "Stop");
-      if (e.city) label += "<br>" + Diary.escapeHtml(e.city);
+      var loc = Diary.locationLabel(e);
+      var href = Diary.entryHref(Diary.decorateEntry(e, { slug: slug, title: document.getElementById("trip-title").textContent }));
+      var label = '<a href="' + Diary.escapeHtml(href) + '">' + Diary.escapeHtml(e.place || "Stop") + "</a>";
+      if (loc) label += "<br>" + Diary.escapeHtml(loc);
       marker.bindPopup(label);
       bounds.push([e.lat, e.lng]);
     });

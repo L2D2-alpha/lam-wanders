@@ -12,12 +12,12 @@
   }
 
   function highlightCard(entry) {
-    var thumb = entry.styledImage
-      ? '<img src="' + Diary.escapeHtml(entry.styledImage) + '" alt="' + Diary.escapeHtml(entry.place || "Highlight") + '" loading="lazy">'
+    var thumb = Diary.coverImage(entry)
+      ? '<img src="' + Diary.escapeHtml(Diary.coverImage(entry)) + '" alt="' + Diary.escapeHtml(entry.place || "Highlight") + '" loading="lazy">'
       : "";
     return (
       '<article class="timeline-card">' +
-        '<a class="card-link" href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '" aria-label="' + Diary.escapeHtml(entry.place || "A favorite stop") + '"></a>' +
+        '<a class="card-link" href="' + Diary.escapeHtml(Diary.entryHref(entry)) + '" aria-label="' + Diary.escapeHtml(entry.place || "A favorite stop") + '"></a>' +
         (thumb ? '<div class="timeline-thumb">' + thumb + "</div>" : "") +
         '<div class="timeline-copy">' +
           '<p class="timeline-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</p>" +

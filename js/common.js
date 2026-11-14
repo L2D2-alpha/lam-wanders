@@ -23,6 +23,19 @@
     });
   }
 
+  function formatShortDate(iso) {
+    if (!iso) return "";
+    var parts = String(iso).split("-");
+    if (parts.length !== 3) return String(iso);
+    var date = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+    if (isNaN(date.getTime())) return String(iso);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      timeZone: "UTC"
+    });
+  }
+
   function formatRange(start, end) {
     if (start && end && start !== end) return formatDate(start) + " – " + formatDate(end);
     return formatDate(start || end);
@@ -157,6 +170,68 @@
     return "trip.html?trip=" + encodeURIComponent(entry.tripSlug) + "#" + encodeURIComponent(entry.entryId);
   }
 
+  function entryHref(entry, trip) {
+    var slug = (entry && entry.tripSlug) || (trip && trip.slug);
+    var id = (entry && entry.entryId) || entryId(entry, trip || { slug: slug });
+    if (!slug) return "trips.html";
+    return "entry.html?trip=" + encodeURIComponent(slug) + "&entry=" + encodeURIComponent(id);
+  }
+
+  function entryPhotos(entry) {
+    var photos = [];
+    if (entry && Array.isArray(entry.photos) && entry.photos.length) {
+      entry.photos.forEach(function (item) {
+        if (!item) return;
+        if (typeof item === "string") {
+          photos.push({ src: item, kind: "photo", alt: "", caption: "" });
+          return;
+        }
+        if (item.src) {
+          photos.push({
+            src: item.src,
+            kind: item.kind || "photo",
+            alt: item.alt || "",
+            caption: item.caption || ""
+          });
+        }
+      });
+      return photos;
+    }
+    if (entry && entry.styledImage) {
+      photos.push({
+        src: entry.styledImage,
+        kind: "styled",
+        alt: (entry.place || "Stop") + " (styled)",
+        caption: ""
+      });
+    }
+    if (entry && entry.originalImage) {
+      photos.push({
+        src: entry.originalImage,
+        kind: "original",
+        alt: (entry.place || "Stop") + " (original)",
+        caption: ""
+      });
+    }
+    return photos;
+  }
+
+  function coverImage(entry) {
+    if (entry && entry.styledImage) return entry.styledImage;
+    var photos = entryPhotos(entry);
+    var styled = photos.filter(function (photo) { return photo.kind === "styled"; })[0];
+    if (styled) return styled.src;
+    return photos[0] ? photos[0].src : "";
+  }
+
+  function photoKindLabel(photo) {
+    if (!photo) return "Photo";
+    if (photo.caption) return photo.caption;
+    if (photo.kind === "styled") return "Styled";
+    if (photo.kind === "original") return "Original";
+    return "Photo";
+  }
+
   function fetchJson(path) {
     return fetch(path, { cache: "no-cache" }).then(function (res) {
       if (!res.ok) throw new Error("Could not load " + path);
@@ -228,6 +303,7 @@
   global.Diary = {
     escapeHtml: escapeHtml,
     formatDate: formatDate,
+    formatShortDate: formatShortDate,
     formatRange: formatRange,
     yearOf: yearOf,
     tripDates: tripDates,
@@ -235,6 +311,7 @@
     sortEntries: sortEntriesOldest,
     sortEntriesNewest: sortEntriesNewest,
     entryId: entryId,
+    decorateEntry: decorateEntry,
     flattenEntries: flattenEntries,
     shortText: shortText,
     locationLabel: locationLabel,
@@ -244,6 +321,10 @@
     whereLineHtml: whereLineHtml,
     checkInLabel: checkInLabel,
     tripHref: tripHref,
+    entryHref: entryHref,
+    entryPhotos: entryPhotos,
+    coverImage: coverImage,
+    photoKindLabel: photoKindLabel,
     loadTrips: loadTrips,
     loadYears: loadYears,
     loadAbout: loadAbout,

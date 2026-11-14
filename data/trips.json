@@ -19,7 +19,19 @@
           "styledImage": "images/aasgard-pass/aasgard-pass-styled.jpg",
           "originalImage": "images/aasgard-pass/aasgard-pass.jpg",
           "text": "Made it to Aasgard Pass in the Enchantments. Coming down was the tough part. My knees are still talking to me about it.",
-          "shortText": "Aasgard Pass. Tough hike down, and my knees felt it."
+          "shortText": "Aasgard Pass. Tough hike down, and my knees felt it.",
+          "photos": [
+            {
+              "src": "images/aasgard-pass/aasgard-pass-styled.jpg",
+              "kind": "styled",
+              "alt": "Aasgard Pass, ink drawing"
+            },
+            {
+              "src": "images/aasgard-pass/aasgard-pass.jpg",
+              "kind": "original",
+              "alt": "Aasgard Pass"
+            }
+          ]
         }
       ]
     }
