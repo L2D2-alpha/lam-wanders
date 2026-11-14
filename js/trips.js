@@ -16,7 +16,7 @@
   function tripCard(trip) {
     var slug = encodeURIComponent(trip.slug || "");
     var title = Diary.escapeHtml(trip.title || "Untitled trip");
-    var entries = Diary.sortEntries(trip.entries);
+    var entries = Diary.sortEntriesNewest(trip.entries);
     var dates = Diary.tripDates(trip);
     var count = entries.length;
     var stopWord = count === 1 ? "stop" : "stops";

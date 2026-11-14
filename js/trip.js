@@ -92,7 +92,7 @@
       }
       missingEl.hidden = true;
       tripEl.hidden = false;
-      var entries = Diary.sortEntries(trip.entries);
+      var entries = Diary.sortEntriesNewest(trip.entries);
       var title = trip.title || "Untitled trip";
       document.title = title + " — Lam Wanders";
       document.getElementById("trip-title").textContent = title;

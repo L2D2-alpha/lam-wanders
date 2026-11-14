@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4ecdc">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.github.com; img-src 'self' blob: data:; style-src 'self'; script-src 'self'; font-src 'self'; base-uri 'self'; form-action 'self'">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="admin.css">
+  <title>Admin — Lam Wanders</title>
+</head>
+<body data-page="admin">
+<svg class="admin-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="rough-edge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>
+    </filter>
+    <symbol id="seal-lt" viewBox="0 0 40 40">
+      <rect x="1" y="1" width="38" height="38" rx="3" fill="#b0242a"/>
+      <rect x="4.2" y="4.2" width="31.6" height="31.6" rx="1.2" fill="none" stroke="#fbf6ec" stroke-width="1.5"/>
+      <g fill="none" stroke="#fbf6ec" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+        <path d="M10.5 9.5 V28.2 Q10.5 30 12.3 30 H18.4 V26.6"/>
+        <path d="M20.8 13 V10 H31.4 V13"/>
+        <path d="M26.1 10 V30.4"/>
+      </g>
+      <rect x="16" y="3.2" width="2.4" height="2.2" fill="#b0242a"/>
+      <rect x="34.6" y="21" width="2.2" height="2.6" fill="#b0242a"/>
+    </symbol>
+  </defs>
+</svg>
+  <div class="page">
+    <header class="site-header">
+      <a class="brand" href="../index.html">
+        <span class="seal" aria-hidden="true"><svg viewBox="0 0 40 40"><use href="#seal-lt"/></svg></span>
+        <span class="brand-text">
+          <span class="title">Lam Wanders</span>
+          <span class="tagline">a travel diary kept for the memories</span>
+        </span>
+      </a>
+      <div class="admin-actions" id="signed-in-actions" hidden>
+        <a class="admin-text-link" href="../index.html">View site</a>
+        <button type="button" class="admin-btn admin-btn-quiet" id="sign-out">Sign out</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="sign-in" class="admin-signin">
+        <h1>Admin</h1>
+        <p>Paste a GitHub fine-grained token that can read and write the Lam Wanders repository. It is kept in this browser tab, or on this device if you choose, and is only sent to GitHub.</p>
+        <form id="sign-in-form" class="admin-form" autocomplete="off">
+          <label>
+            <span>GitHub token</span>
+            <input type="password" id="token-input" name="token" autocomplete="off" spellcheck="false" required>
+          </label>
+          <label>
+            <span>Branch</span>
+            <input type="text" id="branch-input" name="branch" value="main" spellcheck="false" autocapitalize="off">
+          </label>
+          <label class="admin-check">
+            <input type="checkbox" id="remember-input" name="remember">
+            <span>Remember on this device</span>
+          </label>
+          <button type="submit" class="admin-btn admin-btn-primary">Sign in</button>
+        </form>
+        <p class="admin-msg admin-msg-error" id="sign-in-error" hidden></p>
+      </section>
+
+      <section id="editor" hidden>
+        <p class="admin-kicker">Editing <span id="repo-label"></span></p>
+        <div class="admin-banner" id="banner" hidden></div>
+        <div class="admin-grid">
+          <aside class="admin-side">
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h2>Trips</h2>
+                <button type="button" class="admin-btn" id="new-trip">New trip</button>
+              </div>
+              <div id="trip-nav" class="trip-nav"></div>
+            </div>
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h2>Year summaries</h2>
+                <button type="button" class="admin-btn" id="new-year">Add year</button>
+              </div>
+              <div id="years-editor"></div>
+            </div>
+            <div class="admin-card" id="about-card">
+              <h2>About</h2>
+              <div id="about-editor"></div>
+            </div>
+          </aside>
+          <div class="admin-detail admin-card" id="detail">
+            <p class="admin-hint">Pick a trip or entry, or add a new one.</p>
+          </div>
+        </div>
+        <div class="admin-savebar">
+          <button type="button" class="admin-btn admin-btn-primary" id="save-btn" disabled>Save changes</button>
+          <p class="admin-msg" id="save-status"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Kept with care by Spring Roll.</p>
+    </footer>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -51,7 +51,7 @@
   }
 
   function render(trips) {
-    var entries = Diary.sortEntries(Diary.flattenEntries(trips));
+    var entries = Diary.sortEntriesNewest(Diary.flattenEntries(trips));
     var parts = [];
     var years = [];
     var lastYear = null;
