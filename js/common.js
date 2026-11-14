@@ -36,6 +36,32 @@
     });
   }
 
+  function formatTileDate(iso) {
+    if (!iso) return "";
+    var parts = String(iso).split("-");
+    if (parts.length !== 3) return String(iso);
+    var date = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+    if (isNaN(date.getTime())) return String(iso);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC"
+    });
+  }
+
+  function tripDayLabel(entry, trip) {
+    var dates = [];
+    ((trip && trip.entries) || []).forEach(function (item) {
+      if (item && item.date && dates.indexOf(item.date) < 0) dates.push(item.date);
+    });
+    dates.sort();
+    if (!entry || !entry.date || dates.length < 2) return "";
+    var index = dates.indexOf(entry.date);
+    if (index < 0) return "";
+    return "Day " + (index + 1) + " of " + dates.length;
+  }
+
   function formatRange(start, end) {
     if (start && end && start !== end) return formatDate(start) + " – " + formatDate(end);
     return formatDate(start || end);
@@ -275,13 +301,20 @@
     };
   }
 
+  function pluralize(n, one, many) {
+    return n + " " + (n === 1 ? one : many);
+  }
+
   function statLine(stats) {
-    function plural(n, one, many) { return n + " " + (n === 1 ? one : many); }
     return [
-      plural(stats.trips, "trip", "trips"),
-      plural(stats.stops, "stop", "stops"),
-      plural(stats.cities, "city", "cities")
+      pluralize(stats.trips, "trip", "trips"),
+      pluralize(stats.stops, "stop", "stops"),
+      pluralize(stats.cities, "city", "cities")
     ].join(" · ");
+  }
+
+  function yearStatLine(stats) {
+    return pluralize(stats.trips, "trip", "trips") + ", " + pluralize(stats.stops, "stop", "stops");
   }
 
   function photoFigure(src, kind, label) {
@@ -304,6 +337,8 @@
     escapeHtml: escapeHtml,
     formatDate: formatDate,
     formatShortDate: formatShortDate,
+    formatTileDate: formatTileDate,
+    tripDayLabel: tripDayLabel,
     formatRange: formatRange,
     yearOf: yearOf,
     tripDates: tripDates,
@@ -330,6 +365,40 @@
     loadAbout: loadAbout,
     yearStats: yearStats,
     statLine: statLine,
+    yearStatLine: yearStatLine,
     photoFigure: photoFigure
   };
+
+  function injectFilters() {
+    if (document.getElementById("deckle")) return;
+    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "0");
+    svg.setAttribute("height", "0");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    svg.style.position = "absolute";
+    svg.innerHTML =
+      '<defs>' +
+        '<filter id="deckle" x="-5%" y="-5%" width="110%" height="110%">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="t"/>' +
+          '<feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G"/>' +
+        '</filter>' +
+        '<filter id="rough-edge" x="-10%" y="-10%" width="120%" height="120%">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" result="t"/>' +
+          '<feDisplacementMap in="SourceGraphic" in2="t" scale="2.2"/>' +
+        '</filter>' +
+        '<filter id="ink-bleed" x="-2%" y="-40%" width="104%" height="180%">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.02 0.4" numOctaves="3" seed="11" result="t"/>' +
+          '<feDisplacementMap in="SourceGraphic" in2="t" scale="6"/>' +
+        '</filter>' +
+      '</defs>';
+    document.body.insertBefore(svg, document.body.firstChild);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", injectFilters);
+  } else {
+    injectFilters();
+  }
+
 })(window);

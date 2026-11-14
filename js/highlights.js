@@ -8,7 +8,7 @@
     var loc = Diary.escapeHtml(Diary.locationLabel(entry));
     var link = Diary.mapsLink(entry);
     var line = [loc, link].filter(Boolean).join(" · ");
-    return line ? '<p class="timeline-city">' + line + "</p>" : "";
+    return line ? '<p class="hl-city">' + line + "</p>" : "";
   }
 
   function highlightCard(entry) {
@@ -16,14 +16,14 @@
       ? '<img src="' + Diary.escapeHtml(Diary.coverImage(entry)) + '" alt="' + Diary.escapeHtml(entry.place || "Highlight") + '" loading="lazy">'
       : "";
     return (
-      '<article class="timeline-card">' +
+      '<article class="hl-card">' +
         '<a class="card-link" href="' + Diary.escapeHtml(Diary.entryHref(entry)) + '" aria-label="' + Diary.escapeHtml(entry.place || "A favorite stop") + '"></a>' +
-        (thumb ? '<div class="timeline-thumb">' + thumb + "</div>" : "") +
-        '<div class="timeline-copy">' +
-          '<p class="timeline-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</p>" +
+        (thumb ? '<div class="hl-thumb">' + thumb + "</div>" : "") +
+        '<div class="hl-copy">' +
+          '<p class="hl-date">' + Diary.escapeHtml(Diary.formatDate(entry.date)) + "</p>" +
           "<h3>" + Diary.escapeHtml(entry.place || "A favorite stop") + "</h3>" +
           highlightWhere(entry) +
-          (Diary.shortText(entry) ? '<p class="timeline-text">' + Diary.escapeHtml(Diary.shortText(entry)) + "</p>" : "") +
+          (Diary.shortText(entry) ? '<p class="hl-text">' + Diary.escapeHtml(Diary.shortText(entry)) + "</p>" : "") +
         "</div>" +
       "</article>"
     );
@@ -37,7 +37,7 @@
       ? Diary.escapeHtml(summary)
       : "A short yearly summary can go here.";
     return (
-      '<section class="timeline-year">' +
+      '<section class="highlights-year">' +
         '<div class="timeline-year-head">' +
           "<h2>" + year + "</h2>" +
           '<p class="year-stats">' + Diary.escapeHtml(Diary.statLine(stats)) + "</p>" +

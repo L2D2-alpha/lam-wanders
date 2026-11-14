@@ -34,6 +34,41 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "alaska-2024",
+      "title": "Alaska",
+      "startDate": "2024-02-18",
+      "endDate": "2024-02-18",
+      "entries": [
+        {
+          "place": "North of Fairbanks",
+          "area": "Alaska",
+          "type": "scenery",
+          "date": "2024-02-18",
+          "time": "9:50 AM AKST",
+          "lat": 65.538,
+          "lng": -148.8803,
+          "style": "ink",
+          "highlight": true,
+          "styledImage": "images/alaska-2024/north-of-fairbanks-styled.jpg",
+          "originalImage": "images/alaska-2024/north-of-fairbanks.jpg",
+          "text": "Landscape photo trip with Marc Adamus in February. I was freezing my butt off the whole time. Worth it for these snow-buried trees.",
+          "shortText": "Photo trip with Marc Adamus. Freezing, and worth it.",
+          "photos": [
+            {
+              "src": "images/alaska-2024/north-of-fairbanks-styled.jpg",
+              "kind": "styled",
+              "alt": "North of Fairbanks, ink drawing"
+            },
+            {
+              "src": "images/alaska-2024/north-of-fairbanks.jpg",
+              "kind": "original",
+              "alt": "North of Fairbanks"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

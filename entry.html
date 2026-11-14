@@ -14,11 +14,11 @@
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <title>Entry — Lam Wanders</title>
   <meta name="description" content="A stop in Lam Wanders, a travel diary kept by Spring Roll.">
-
 </head>
-<body data-page="trips">
+<body data-page="entry">
   <div class="page">
     <header class="site-header">
       <a class="brand" href="index.html">
@@ -57,8 +57,7 @@
 
     <main>
       <p class="back" id="entry-back">
-        <a href="index.html">← Home</a>
-        <a href="trips.html">All trips</a>
+        <a href="index.html"><svg viewBox="0 0 22 12" aria-hidden="true"><path d="M21 6.4C15 5.6 8 6.2 2 6.1M6 1.5 1.5 6 6 10.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Back to the timeline</a>
       </p>
       <section id="entry-missing" class="empty-state" hidden>
         <div class="empty-card">
@@ -66,32 +65,42 @@
           <p>That stop is not in the diary yet. <a href="index.html">Back home</a>.</p>
         </div>
       </section>
-      <article id="entry" class="entry-detail" hidden>
+      <article id="entry" hidden>
         <header class="entry-hero">
-          <p class="eyebrow" id="entry-date"></p>
-          <h1 id="entry-title"></h1>
-          <p class="entry-where" id="entry-where"></p>
-          <p class="entry-trip" id="entry-trip" hidden></p>
+          <div>
+            <p class="eyebrow" id="entry-date"></p>
+            <h1 id="entry-title"></h1>
+            <p class="entry-summary" id="entry-summary" hidden></p>
+            <div class="entry-meta" id="entry-meta"></div>
+            <p class="entry-trip" id="entry-trip" hidden></p>
+          </div>
+          <span class="seal" aria-hidden="true">旅</span>
         </header>
-        <div class="gallery" id="gallery"></div>
+        <svg class="hero-stroke" viewBox="0 0 1000 18" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 9 C 200 6, 420 8, 640 9 S 900 11, 1000 8 L 1000 10 C 880 13, 640 12, 420 11 S 160 12, 0 11 Z"/></svg>
+        <section class="photos" id="gallery" aria-label="Photos from this day"></section>
         <p class="entry-text" id="entry-text" hidden></p>
+        <section class="map-wrap" id="map-wrap" hidden>
+          <h2 class="map-heading">On the map</h2>
+          <div id="map" class="map" role="img" aria-label="Map of this stop"></div>
+        </section>
       </article>
     </main>
+    <dialog class="lightbox" aria-label="Photo viewer">
+      <div class="lightbox-inner">
+        <button class="lb-btn lb-prev" type="button" aria-label="Previous photo">&#8592;</button>
+        <img alt="">
+        <button class="lb-btn lb-next" type="button" aria-label="Next photo">&#8594;</button>
+        <p class="lb-cap"></p>
+        <button class="lb-btn lb-close" type="button" aria-label="Close">&#215;</button>
+      </div>
+    </dialog>
     <footer class="site-footer">
       <p>Kept with care by Spring Roll.</p>
     </footer>
-
   </div>
-  <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
-    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">Close</button>
-    <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
-    <figure class="lightbox-figure">
-      <img id="lightbox-image" alt="">
-      <figcaption id="lightbox-caption"></figcaption>
-    </figure>
-    <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next photo">›</button>
-  </dialog>
+  <script src="vendor/leaflet/leaflet.js"></script>
   <script src="js/common.js"></script>
+  <script src="js/lightbox.js"></script>
   <script src="js/entry.js"></script>
 </body>
 </html>

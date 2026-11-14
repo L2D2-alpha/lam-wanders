@@ -6,14 +6,6 @@
   var missingEl = document.getElementById("entry-missing");
   var entryEl = document.getElementById("entry");
   var galleryEl = document.getElementById("gallery");
-  var lightbox = document.getElementById("lightbox");
-  var lightboxImage = document.getElementById("lightbox-image");
-  var lightboxCaption = document.getElementById("lightbox-caption");
-  var closeBtn = document.getElementById("lightbox-close");
-  var prevBtn = document.getElementById("lightbox-prev");
-  var nextBtn = document.getElementById("lightbox-next");
-  var photos = [];
-  var activeIndex = 0;
 
   function showMissing() {
     missingEl.hidden = false;
@@ -33,52 +25,107 @@
     return { trip: trip, entry: Diary.decorateEntry(match, trip) };
   }
 
-  function galleryItem(photo, index, place) {
+  function galleryItem(photo, place) {
     var kind = photo.kind || "photo";
-    var label = photo.alt || (place + " (" + Diary.photoKindLabel(photo) + ")");
+    var kindLabel = Diary.photoKindLabel(photo);
+    var caption = photo.caption || photo.alt || place;
+    var alt = photo.alt || (place + " (" + kindLabel + ")");
+    var land = "";
     return (
-      '<figure class="photo-frame ' + Diary.escapeHtml(kind) + '">' +
-        '<button type="button" class="gallery-open" data-index="' + index + '" aria-label="View ' + Diary.escapeHtml(label) + ' larger">' +
-          '<img src="' + Diary.escapeHtml(photo.src) + '" alt="' + Diary.escapeHtml(label) + '">' +
+      '<figure class="photo-frame ' + Diary.escapeHtml(kind) + land + '">' +
+        '<button type="button" data-full="' + Diary.escapeHtml(photo.src) + '" aria-label="Open photo: ' + Diary.escapeHtml(caption) + '">' +
+          '<img src="' + Diary.escapeHtml(photo.src) + '" alt="' + Diary.escapeHtml(alt) + '" loading="lazy">' +
         "</button>" +
-        "<figcaption>" + Diary.escapeHtml(Diary.photoKindLabel(photo)) + "</figcaption>" +
+        "<figcaption><span><b>" + Diary.escapeHtml(caption) + "</b></span>" +
+        '<span class="kind">' + Diary.escapeHtml(kindLabel) + "</span></figcaption>" +
       "</figure>"
     );
+  }
+
+  function pinIcon() {
+    return L.divIcon({
+      className: "clay-pin",
+      html: '<svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 1c7.2 0 13 5.7 13 12.8 0 9.2-13 21.2-13 21.2S1 23 1 13.8C1 6.7 6.8 1 14 1z" fill="#c45c3e" stroke="#9a3f28" stroke-width="1.2"/><circle cx="14" cy="13.5" r="5.2" fill="#f6efe4"/></svg>',
+      iconSize: [28, 36],
+      iconAnchor: [14, 36],
+      popupAnchor: [0, -30]
+    });
+  }
+
+  function drawMap(entry) {
+    var wrap = document.getElementById("map-wrap");
+    var coords = Diary.entryCoords(entry);
+    if (!coords || typeof L === "undefined") {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    var map = L.map("map", { scrollWheelZoom: false, attributionControl: true });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    var marker = L.marker([coords.lat, coords.lng], { icon: pinIcon() }).addTo(map);
+    var label = Diary.escapeHtml(entry.place || "Stop");
+    var loc = Diary.locationLabel(entry);
+    if (loc) label += "<br>" + Diary.escapeHtml(loc);
+    marker.bindPopup(label);
+    map.setView([coords.lat, coords.lng], 8);
+    setTimeout(function () { map.invalidateSize(); }, 200);
   }
 
   function render(found) {
     var entry = found.entry;
     var trip = found.trip;
     var place = entry.place || "A stop along the way";
-    photos = Diary.entryPhotos(entry);
+    var photos = Diary.entryPhotos(entry);
     document.title = place + " — Lam Wanders";
     document.getElementById("entry-title").textContent = place;
     var dateEl = document.getElementById("entry-date");
-    if (entry.date) dateEl.textContent = Diary.formatDate(entry.date);
+    var day = Diary.tripDayLabel(entry, trip);
+    var dateLabel = Diary.formatTileDate(entry.date);
+    if (dateLabel && day) dateEl.textContent = dateLabel + " · " + day;
+    else if (dateLabel) dateEl.textContent = dateLabel;
     else dateEl.hidden = true;
-    var whereEl = document.getElementById("entry-where");
+
+    var summaryEl = document.getElementById("entry-summary");
     var loc = Diary.locationLabel(entry);
-    var maps = Diary.mapsLink(entry);
-    var bits = [Diary.escapeHtml(loc), maps].filter(Boolean).join(" · ");
-    if (bits) whereEl.innerHTML = bits;
-    else whereEl.hidden = true;
+    if (loc) {
+      summaryEl.hidden = false;
+      summaryEl.textContent = loc;
+    }
+
+    var meta = [];
+    var count = photos.length;
+    if (count) meta.push(count === 1 ? "1 photo" : count + " photos");
+    if (entry.type) meta.push(Diary.escapeHtml(entry.type));
+    var coords = Diary.entryCoords(entry);
+    if (coords) {
+      var href = "https://www.google.com/maps?q=" + coords.lat.toFixed(4) + "," + coords.lng.toFixed(4);
+      var label = coords.lat.toFixed(4) + ", " + coords.lng.toFixed(4);
+      meta.push('<a class="maps-link" href="' + Diary.escapeHtml(href) + '" target="_blank" rel="noopener">Open in Maps</a> (' + Diary.escapeHtml(label) + ")");
+    }
+    document.getElementById("entry-meta").innerHTML = meta.join('<span aria-hidden="true"> · </span>');
+
     var tripEl = document.getElementById("entry-trip");
     if (trip.title) {
       tripEl.hidden = false;
       tripEl.innerHTML = 'From the trip <a href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
         Diary.escapeHtml(trip.title) + "</a>";
     }
+
     var back = document.getElementById("entry-back");
+    var hash = encodeURIComponent(entry.entryId);
     back.innerHTML =
-      '<a href="index.html">← Home</a>' +
+      '<a href="index.html#' + hash + '"><svg viewBox="0 0 22 12" aria-hidden="true"><path d="M21 6.4C15 5.6 8 6.2 2 6.1M6 1.5 1.5 6 6 10.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Back to the timeline</a>' +
       (trip.slug
-        ? '<a href="trip.html?trip=' + encodeURIComponent(trip.slug) + '">Back to ' +
-          Diary.escapeHtml(trip.title || "this trip") + "</a>"
-        : '<a href="trips.html">All trips</a>');
+        ? '<a href="trip.html?trip=' + encodeURIComponent(trip.slug) + '">' +
+          Diary.escapeHtml(trip.title || "This trip") + "</a>"
+        : "");
+
     if (photos.length) {
-      galleryEl.innerHTML = photos.map(function (photo, index) {
-        return galleryItem(photo, index, place);
-      }).join("");
+      galleryEl.hidden = false;
+      galleryEl.innerHTML = photos.map(function (photo) { return galleryItem(photo, place); }).join("");
     } else {
       galleryEl.hidden = true;
     }
@@ -90,65 +137,9 @@
     }
     missingEl.hidden = true;
     entryEl.hidden = false;
+    if (window.LamLightbox) window.LamLightbox.init();
+    drawMap(entry);
   }
-
-  function updateLightbox() {
-    if (!photos.length) return;
-    var photo = photos[activeIndex];
-    lightboxImage.src = photo.src;
-    lightboxImage.alt = photo.alt || Diary.photoKindLabel(photo);
-    lightboxCaption.textContent = Diary.photoKindLabel(photo);
-    var many = photos.length > 1;
-    prevBtn.hidden = !many;
-    nextBtn.hidden = !many;
-    prevBtn.disabled = !many;
-    nextBtn.disabled = !many;
-  }
-
-  function openLightbox(index) {
-    if (!photos.length) return;
-    activeIndex = (index + photos.length) % photos.length;
-    updateLightbox();
-    if (typeof lightbox.showModal === "function") lightbox.showModal();
-    else lightbox.setAttribute("open", "");
-    closeBtn.focus();
-  }
-
-  function closeLightbox() {
-    if (typeof lightbox.close === "function" && lightbox.open) lightbox.close();
-    else lightbox.removeAttribute("open");
-  }
-
-  function step(delta) {
-    if (photos.length < 2) return;
-    activeIndex = (activeIndex + delta + photos.length) % photos.length;
-    updateLightbox();
-  }
-
-  galleryEl.addEventListener("click", function (event) {
-    var button = event.target.closest(".gallery-open");
-    if (!button) return;
-    openLightbox(Number(button.getAttribute("data-index")) || 0);
-  });
-
-  closeBtn.addEventListener("click", closeLightbox);
-  prevBtn.addEventListener("click", function () { step(-1); });
-  nextBtn.addEventListener("click", function () { step(1); });
-  lightbox.addEventListener("click", function (event) {
-    if (event.target === lightbox) closeLightbox();
-  });
-  document.addEventListener("keydown", function (event) {
-    if (!lightbox.open) return;
-    if (event.key === "Escape") {
-      closeLightbox();
-    } else if (event.key === "ArrowRight") {
-      event.preventDefault();
-      step(1);
-    } else if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      step(-1);
-    }
-  });
 
   Diary.loadTrips()
     .then(function (trips) {
