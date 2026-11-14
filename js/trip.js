@@ -1,0 +1,113 @@
+(function () {
+  var params = new URLSearchParams(location.search);
+  var slug = params.get("trip") || params.get("slug") || "";
+  var missingEl = document.getElementById("trip-missing");
+  var tripEl = document.getElementById("trip");
+
+  function showMissing() {
+    missingEl.hidden = false;
+    tripEl.hidden = true;
+    document.title = "Trip not found — Lam Wanders";
+  }
+
+  function photoFigure(src, kind, label) {
+    if (!src) return "";
+    return (
+      '<figure class="photo-frame ' + kind + '">' +
+        '<img src="' + Diary.escapeHtml(src) + '" alt="' + Diary.escapeHtml(label) + '" loading="lazy">' +
+        "<figcaption>" + (kind === "styled" ? "Styled" : "Original") + "</figcaption>" +
+      "</figure>"
+    );
+  }
+
+  function entryHtml(entry) {
+    var place = entry.place || "A stop along the way";
+    var bits = [];
+    if (entry.city) bits.push(entry.city);
+    if (entry.date) bits.push(Diary.formatDate(entry.date));
+    var photos = photoFigure(entry.styledImage, "styled", place + " (styled)") +
+      photoFigure(entry.originalImage, "original", place + " (original)");
+    var text = entry.text || entry.caption || "";
+    return (
+      '<article class="entry">' +
+        '<header class="entry-header">' +
+          '<h2 class="entry-place">' + Diary.escapeHtml(place) + "</h2>" +
+          (bits.length ? '<p class="entry-where">' + Diary.escapeHtml(bits.join(" · ")) + "</p>" : "") +
+        "</header>" +
+        (photos ? '<div class="photos">' + photos + "</div>" : "") +
+        (text ? '<p class="entry-text">' + Diary.escapeHtml(text) + "</p>" : "") +
+      "</article>"
+    );
+  }
+
+  function pinIcon() {
+    return L.divIcon({
+      className: "clay-pin",
+      html: '<svg width="28" height="36" viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14 1c7.2 0 13 5.7 13 12.8 0 9.2-13 21.2-13 21.2S1 23 1 13.8C1 6.7 6.8 1 14 1z" fill="#c45c3e" stroke="#9a3f28" stroke-width="1.2"/><circle cx="14" cy="13.5" r="5.2" fill="#f6efe4"/></svg>',
+      iconSize: [28, 36],
+      iconAnchor: [14, 36],
+      popupAnchor: [0, -30]
+    });
+  }
+
+  function drawMap(entries) {
+    var points = entries.filter(function (e) {
+      return typeof e.lat === "number" && typeof e.lng === "number" && isFinite(e.lat) && isFinite(e.lng);
+    });
+    var wrap = document.getElementById("map-wrap");
+    if (!points.length || typeof L === "undefined") {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    var map = L.map("map", { scrollWheelZoom: false, attributionControl: true });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    var icon = pinIcon();
+    var bounds = [];
+    points.forEach(function (e) {
+      var marker = L.marker([e.lat, e.lng], { icon: icon }).addTo(map);
+      var label = Diary.escapeHtml(e.place || "Stop");
+      if (e.city) label += "<br>" + Diary.escapeHtml(e.city);
+      marker.bindPopup(label);
+      bounds.push([e.lat, e.lng]);
+    });
+    if (bounds.length === 1) {
+      map.setView(bounds[0], 12);
+    } else {
+      map.fitBounds(bounds, { padding: [28, 28], maxZoom: 12 });
+    }
+    setTimeout(function () { map.invalidateSize(); }, 200);
+  }
+
+  Diary.loadTrips()
+    .then(function (trips) {
+      var trip = trips.filter(function (t) { return t && t.slug === slug; })[0];
+      if (!trip) {
+        showMissing();
+        return;
+      }
+      missingEl.hidden = true;
+      tripEl.hidden = false;
+      var entries = Diary.sortEntries(trip.entries);
+      var title = trip.title || "Untitled trip";
+      document.title = title + " — Lam Wanders";
+      document.getElementById("trip-title").textContent = title;
+      var dates = Diary.tripDates(trip);
+      var dateEl = document.getElementById("trip-dates");
+      if (dates) dateEl.textContent = dates;
+      else dateEl.hidden = true;
+      var summaryEl = document.getElementById("trip-summary");
+      if (trip.summary) {
+        summaryEl.hidden = false;
+        summaryEl.textContent = trip.summary;
+      }
+      document.getElementById("entries").innerHTML = entries.length
+        ? entries.map(entryHtml).join("")
+        : '<p class="trip-summary">No entries on this trip yet.</p>';
+      drawMap(entries);
+    })
+    .catch(showMissing);
+})();
