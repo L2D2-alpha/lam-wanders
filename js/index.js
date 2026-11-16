@@ -93,7 +93,13 @@
       }
       emptyEl.hidden = true;
       homeEl.hidden = false;
-      checkInEl.textContent = "Now / checking in at " + Diary.checkInLabel(entries[0]);
+      var latest = entries[0];
+      var latestTrip = trips.filter(function (trip) { return trip && trip.slug === latest.tripSlug; })[0];
+      if (Diary.isGroup(latestTrip)) {
+        checkInEl.textContent = "Now / " + (latest.place || "home");
+      } else {
+        checkInEl.textContent = "Now / checking in at " + Diary.checkInLabel(latest);
+      }
       render(trips);
       if (window.LamTimeline) window.LamTimeline.init();
     })

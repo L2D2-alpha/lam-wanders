@@ -320,7 +320,9 @@
   }
 
   function yearStatLine(stats) {
-    return pluralize(stats.trips, "trip", "trips") + ", " + pluralize(stats.stops, "stop", "stops");
+    var moments = pluralize(stats.stops, "moment", "moments");
+    if (!stats.trips) return moments;
+    return pluralize(stats.trips, "trip", "trips") + ", " + moments;
   }
 
   function photoFigure(src, kind, label) {
