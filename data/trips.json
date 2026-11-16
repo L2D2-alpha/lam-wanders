@@ -1,35 +1,63 @@
 {
   "trips": [
     {
-      "slug": "aasgard-pass",
-      "title": "Aasgard Pass",
-      "startDate": "2022-10-11",
-      "endDate": "2022-10-11",
+      "slug": "kauai-2026",
+      "title": "Kauai",
+      "startDate": "2026-04-25",
+      "endDate": "2026-04-26",
+      "summary": "A few days on Kauai: Waimea Canyon from the lookouts and the Na Pali Coast from the air.",
       "entries": [
         {
-          "place": "Aasgard Pass",
-          "area": "The Enchantments, near Leavenworth, WA",
-          "type": "mountain pass / hiking route",
-          "date": "2022-10-11",
-          "time": "5:18 PM PDT",
-          "lat": 47.4818,
-          "lng": -120.8239,
+          "place": "Cliff Trail Lookout",
+          "area": "Waimea Canyon State Park, Kauai, Hawaii",
+          "type": "lookout",
+          "date": "2026-04-26",
+          "time": "11:17 AM HST",
+          "lat": 22.08911,
+          "lng": -159.67157,
           "style": "ink",
           "highlight": true,
-          "styledImage": "images/aasgard-pass/aasgard-pass-styled-4.jpg",
-          "originalImage": "images/aasgard-pass/aasgard-pass.jpg",
-          "text": "Made it to Aasgard Pass in the Enchantments. Coming down was the tough part. My knees are still talking to me about it.",
-          "shortText": "Aasgard Pass. Tough hike down, and my knees felt it.",
+          "styledImage": "images/kauai-2026/cliff-trail-lookout-styled-4.jpg",
+          "originalImage": "images/kauai-2026/cliff-trail-lookout.jpg",
+          "text": "Easy to get to from the road. It's a quick pull-off, and a small fee gets you into three of the major lookouts along the road, with parking and restrooms. A respite to take in the views, with a waterfall peeking through the trees.",
+          "shortText": "Easy to get to from the road. A respite to take in the views, with a waterfall peeking through the trees.",
           "photos": [
             {
-              "src": "images/aasgard-pass/aasgard-pass-styled-4.jpg",
+              "src": "images/kauai-2026/cliff-trail-lookout-styled-4.jpg",
               "kind": "styled",
-              "alt": "Aasgard Pass, ink drawing"
+              "alt": "Cliff Trail Lookout, ink drawing"
             },
             {
-              "src": "images/aasgard-pass/aasgard-pass.jpg",
+              "src": "images/kauai-2026/cliff-trail-lookout.jpg",
               "kind": "original",
-              "alt": "Aasgard Pass"
+              "alt": "Cliff Trail Lookout"
+            }
+          ]
+        },
+        {
+          "place": "Na Pali Coast helicopter tour",
+          "area": "Kauai, Hawaii",
+          "type": "helicopter tour",
+          "date": "2026-04-25",
+          "time": "8:42 AM HST",
+          "lat": 22.15604,
+          "lng": -159.69263,
+          "style": "ink",
+          "highlight": true,
+          "styledImage": "images/kauai-2026/na-pali-coast-styled-4.jpg",
+          "originalImage": "images/kauai-2026/na-pali-coast.jpg",
+          "text": "Saw the Na Pali Coast from a helicopter tour. It was windy and a little scary up there, with the cliffs disappearing into the clouds.",
+          "shortText": "Saw the Na Pali Coast from a helicopter tour. It was windy and a little scary up there.",
+          "photos": [
+            {
+              "src": "images/kauai-2026/na-pali-coast-styled-4.jpg",
+              "kind": "styled",
+              "alt": "Na Pali Coast, ink drawing"
+            },
+            {
+              "src": "images/kauai-2026/na-pali-coast.jpg",
+              "kind": "original",
+              "alt": "Na Pali Coast"
             }
           ]
         }
@@ -65,6 +93,41 @@
               "src": "images/alaska-2024/north-of-fairbanks.jpg",
               "kind": "original",
               "alt": "North of Fairbanks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "aasgard-pass",
+      "title": "Aasgard Pass",
+      "startDate": "2022-10-11",
+      "endDate": "2022-10-11",
+      "entries": [
+        {
+          "place": "Aasgard Pass",
+          "area": "The Enchantments, near Leavenworth, WA",
+          "type": "mountain pass / hiking route",
+          "date": "2022-10-11",
+          "time": "5:18 PM PDT",
+          "lat": 47.4818,
+          "lng": -120.8239,
+          "style": "ink",
+          "highlight": true,
+          "styledImage": "images/aasgard-pass/aasgard-pass-styled-4.jpg",
+          "originalImage": "images/aasgard-pass/aasgard-pass.jpg",
+          "text": "Made it to Aasgard Pass in the Enchantments. Coming down was the tough part. My knees are still talking to me about it.",
+          "shortText": "Aasgard Pass. Tough hike down, and my knees felt it.",
+          "photos": [
+            {
+              "src": "images/aasgard-pass/aasgard-pass-styled-4.jpg",
+              "kind": "styled",
+              "alt": "Aasgard Pass, ink drawing"
+            },
+            {
+              "src": "images/aasgard-pass/aasgard-pass.jpg",
+              "kind": "original",
+              "alt": "Aasgard Pass"
             }
           ]
         }
