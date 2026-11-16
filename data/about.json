@@ -1,5 +1,18 @@
 {
   "title": "About Me",
   "intro": "Lam's travel diary, kept with help from Spring Roll.",
-  "body": ""
+  "body": "",
+  "photoCaption": "My Mochi being a lazy turd.",
+  "photos": [
+    {
+      "src": "images/about/mochi-nap-clay.jpg",
+      "kind": "styled",
+      "alt": "Clay sculpture of Mochi, a small shaggy cream dog, curled up asleep on a green bench"
+    },
+    {
+      "src": "images/about/mochi-nap.jpg",
+      "kind": "original",
+      "alt": "Mochi, a small shaggy cream dog, curled up asleep on a green bench"
+    }
+  ]
 }

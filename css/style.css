@@ -969,6 +969,14 @@ a.trip-card:hover, a.trip-card:focus-visible {
 .about-intro { font-size: 1.15rem; margin: 0 0 1rem; }
 .about-body p { margin: 0 0 0.8rem; }
 .about-body p:last-child { margin-bottom: 0; }
+.about-card .photos { padding-top: 1.15rem; }
+.about-caption {
+  margin: 0.85rem 0 0;
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+.about-photos .photo-frame figcaption { justify-content: flex-end; }
+
 
 @media (max-width: 699px) {
   .hl-card { grid-template-columns: 1fr; }
