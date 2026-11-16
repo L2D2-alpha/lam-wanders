@@ -25,19 +25,50 @@
     return { trip: trip, entry: Diary.decorateEntry(match, trip) };
   }
 
-  function galleryItem(photo, place) {
+  function visiblePhotos(photos) {
+    var styled = [];
+    var originals = [];
+    var rest = [];
+    (photos || []).forEach(function (photo) {
+      if (photo.kind === "original") originals.push(photo);
+      else if (photo.kind === "styled") styled.push(photo);
+      else rest.push(photo);
+    });
+    var visible = styled.length ? styled : rest;
+    if (!visible.length && originals.length) {
+      return originals.map(function (photo) { return { photo: photo, original: null }; });
+    }
+    return visible.map(function (photo, index) {
+      var original = null;
+      if (originals.length === visible.length) original = originals[index];
+      else if (originals.length === 1) original = originals[0];
+      else original = originals[index] || null;
+      return { photo: photo, original: original };
+    });
+  }
+
+  function galleryItem(item, place) {
+    var photo = item.photo;
+    var original = item.original;
     var kind = photo.kind || "photo";
-    var kindLabel = Diary.photoKindLabel(photo);
-    var caption = photo.caption || photo.alt || place;
-    var alt = photo.alt || (place + " (" + kindLabel + ")");
-    var land = "";
+    var caption = photo.caption || place;
+    var alt = photo.alt || caption;
+    var frame = 'photo-frame ' + Diary.escapeHtml(kind) + (original ? " is-reveal" : "");
+    var figcaption = caption
+      ? "<figcaption><span><b>" + Diary.escapeHtml(caption) + "</b></span></figcaption>"
+      : "";
+    var image = '<img src="' + Diary.escapeHtml(photo.src) + '" alt="' + Diary.escapeHtml(alt) + '" loading="lazy">';
+    if (!original) {
+      return '<figure class="' + frame + '">' + image + figcaption + "</figure>";
+    }
     return (
-      '<figure class="photo-frame ' + Diary.escapeHtml(kind) + land + '">' +
-        '<button type="button" data-full="' + Diary.escapeHtml(photo.src) + '" aria-label="Open photo: ' + Diary.escapeHtml(caption) + '">' +
-          '<img src="' + Diary.escapeHtml(photo.src) + '" alt="' + Diary.escapeHtml(alt) + '" loading="lazy">' +
+      '<figure class="' + frame + '">' +
+        '<button type="button" data-original="' + Diary.escapeHtml(original.src) + '" data-original-alt="' +
+          Diary.escapeHtml(original.alt || (place + " (original)")) + '" data-original-caption="' +
+          Diary.escapeHtml(original.caption || place) + '" aria-label="Show the original photo">' +
+          image +
         "</button>" +
-        "<figcaption><span><b>" + Diary.escapeHtml(caption) + "</b></span>" +
-        '<span class="kind">' + Diary.escapeHtml(kindLabel) + "</span></figcaption>" +
+        figcaption +
       "</figure>"
     );
   }
@@ -95,8 +126,9 @@
       summaryEl.textContent = loc;
     }
 
+    var shown = visiblePhotos(photos);
     var meta = [];
-    var count = photos.length;
+    var count = shown.length;
     if (count) meta.push(count === 1 ? "1 photo" : count + " photos");
     if (entry.type) meta.push(Diary.escapeHtml(entry.type));
     var coords = Diary.entryCoords(entry);
@@ -124,9 +156,9 @@
           Diary.escapeHtml(trip.title || "This trip") + "</a>"
         : "");
 
-    if (photos.length) {
+    if (shown.length) {
       galleryEl.hidden = false;
-      galleryEl.innerHTML = photos.map(function (photo) { return galleryItem(photo, place); }).join("");
+      galleryEl.innerHTML = shown.map(function (item) { return galleryItem(item, place); }).join("");
     } else {
       galleryEl.hidden = true;
     }

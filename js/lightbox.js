@@ -1,59 +1,61 @@
-/* Native dialog lightbox. Adapted from the design mockup; init after the gallery is rendered. */
+/* Reveal the original photo from the styled image. Init after the gallery is rendered. */
 (function (global) {
   function initLightbox() {
     var dlg = document.querySelector(".lightbox");
     if (!dlg) return;
     var img = dlg.querySelector("img");
     var cap = dlg.querySelector(".lb-cap");
-    var buttons = Array.prototype.slice.call(document.querySelectorAll(".photo-frame button"));
-    if (!img || !buttons.length) return;
-    var current = 0, opener = null, startX = null;
+    var closeBtn = dlg.querySelector(".lb-close");
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".photo-frame button[data-original]"));
+    if (!img || !closeBtn) return;
+    var opener = null;
+    var generation = 0;
 
-    function captionText(button, index) {
-      var figure = button.closest("figure");
-      var bold = figure && figure.querySelector("figcaption b");
-      var label = bold ? bold.textContent : (button.getAttribute("aria-label") || "Photo");
-      return label + " (" + (index + 1) + " of " + buttons.length + ")";
+    function show(button) {
+      var mine = ++generation;
+      opener = button;
+      img.classList.remove("is-ready");
+      img.removeAttribute("src");
+      img.alt = button.getAttribute("data-original-alt") || "Original photo";
+      var caption = button.getAttribute("data-original-caption") || "";
+      if (cap) {
+        cap.textContent = caption;
+        cap.hidden = !caption;
+      }
+      function setReady() {
+        if (mine !== generation) return;
+        img.classList.add("is-ready");
+      }
+      img.addEventListener("load", setReady, { once: true });
+      img.addEventListener("error", setReady, { once: true });
+      img.src = button.getAttribute("data-original");
+      if (img.complete && img.naturalWidth) setReady();
+      if (typeof dlg.showModal === "function") dlg.showModal();
+      else dlg.setAttribute("open", "");
+      closeBtn.focus();
     }
 
-    function show(i) {
-      current = (i + buttons.length) % buttons.length;
-      var button = buttons[current];
-      img.src = button.getAttribute("data-full") || button.querySelector("img").src;
-      img.alt = button.querySelector("img") ? button.querySelector("img").alt : "";
-      cap.textContent = captionText(button, current);
+    function hide() {
+      if (dlg.open) dlg.close();
     }
 
-    buttons.forEach(function (button, index) {
-      button.addEventListener("click", function () {
-        opener = button;
-        show(index);
-        dlg.showModal();
-      });
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () { show(button); });
     });
-    dlg.querySelector(".lb-prev").addEventListener("click", function () { show(current - 1); });
-    dlg.querySelector(".lb-next").addEventListener("click", function () { show(current + 1); });
-    dlg.querySelector(".lb-close").addEventListener("click", function () { dlg.close(); });
-    dlg.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") dlg.close();
-      if (event.key === "ArrowRight") show(current + 1);
-      if (event.key === "ArrowLeft") show(current - 1);
+
+    closeBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      hide();
     });
     dlg.addEventListener("click", function (event) {
-      if (event.target === dlg || event.target.classList.contains("lightbox-inner")) dlg.close();
+      if (event.target === closeBtn || closeBtn.contains(event.target)) return;
+      hide();
     });
-    dlg.addEventListener("close", function () { if (opener) opener.focus(); });
-
-    dlg.addEventListener("pointerdown", function (event) {
-      if (event.target.closest(".lb-btn")) return;
-      startX = event.clientX;
-    });
-    dlg.addEventListener("pointerup", function (event) {
-      if (startX == null) return;
-      var delta = event.clientX - startX;
-      startX = null;
-      if (Math.abs(delta) < 40) return;
-      show(current + (delta < 0 ? 1 : -1));
+    dlg.addEventListener("close", function () {
+      generation += 1;
+      img.removeAttribute("src");
+      img.classList.remove("is-ready");
+      if (opener) opener.focus();
     });
   }
 
