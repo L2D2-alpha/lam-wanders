@@ -162,8 +162,13 @@
     return [locationLabel(entry), formatDate(entry && entry.date)].filter(Boolean).join(" · ");
   }
 
+  function isGroup(trip) {
+    return !!(trip && trip.kind === "group");
+  }
+
   function entryCoords(entry) {
     if (!entry) return null;
+    if (entry.lat == null || entry.lng == null || entry.lat === "" || entry.lng === "") return null;
     var lat = Number(entry.lat);
     var lng = Number(entry.lng);
     if (!isFinite(lat) || !isFinite(lng)) return null;
@@ -286,10 +291,11 @@
     var stops = 0;
     var cities = {};
     (trips || []).forEach(function (trip) {
-      if (tripYearSet(trip)[year]) tripCount += 1;
+      if (tripYearSet(trip)[year] && !isGroup(trip)) tripCount += 1;
       (trip.entries || []).forEach(function (entry) {
         if (yearOf(entry.date) !== year) return;
         stops += 1;
+        if (isGroup(trip)) return;
         var loc = entry.city || entry.area;
         if (loc) cities[String(loc).trim().toLowerCase()] = true;
       });
@@ -359,6 +365,7 @@
     shortText: shortText,
     locationLabel: locationLabel,
     whereLine: whereLine,
+    isGroup: isGroup,
     entryCoords: entryCoords,
     mapsLink: mapsLink,
     whereLineHtml: whereLineHtml,

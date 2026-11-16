@@ -1,6 +1,37 @@
 {
   "trips": [
     {
+      "slug": "around-home",
+      "title": "Around home",
+      "kind": "group",
+      "startDate": "2026-11-09",
+      "endDate": "2026-11-09",
+      "entries": [
+        {
+          "place": "Mochi's nap",
+          "area": "Home",
+          "date": "2026-11-09",
+          "time": "9:52 AM",
+          "style": "clay",
+          "styledImage": "images/around-home/mochi-nap-styled-4.jpg",
+          "originalImage": "images/around-home/mochi-nap.jpg",
+          "text": "My Mochi being a lazy turd.",
+          "photos": [
+            {
+              "src": "images/around-home/mochi-nap-styled-4.jpg",
+              "kind": "styled",
+              "alt": "Clay sculpture of Mochi, a small shaggy cream dog, curled up asleep on a green bench"
+            },
+            {
+              "src": "images/around-home/mochi-nap.jpg",
+              "kind": "original",
+              "alt": "Mochi, a small shaggy cream dog, curled up asleep on a green bench"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "slug": "kauai-2026",
       "title": "Kauai",
       "startDate": "2026-04-25",

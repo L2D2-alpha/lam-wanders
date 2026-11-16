@@ -51,7 +51,7 @@
 
   function drawMap(entries) {
     var points = entries.filter(function (e) {
-      return typeof e.lat === "number" && typeof e.lng === "number" && isFinite(e.lat) && isFinite(e.lng);
+      return !!Diary.entryCoords(e);
     });
     var wrap = document.getElementById("map-wrap");
     if (!points.length || typeof L === "undefined") {
@@ -67,13 +67,15 @@
     var icon = pinIcon();
     var bounds = [];
     points.forEach(function (e) {
-      var marker = L.marker([e.lat, e.lng], { icon: icon }).addTo(map);
+      var coords = Diary.entryCoords(e);
+      if (!coords) return;
+      var marker = L.marker([coords.lat, coords.lng], { icon: icon }).addTo(map);
       var loc = Diary.locationLabel(e);
       var href = Diary.entryHref(Diary.decorateEntry(e, { slug: slug, title: document.getElementById("trip-title").textContent }));
       var label = '<a href="' + Diary.escapeHtml(href) + '">' + Diary.escapeHtml(e.place || "Stop") + "</a>";
       if (loc) label += "<br>" + Diary.escapeHtml(loc);
       marker.bindPopup(label);
-      bounds.push([e.lat, e.lng]);
+      bounds.push([coords.lat, coords.lng]);
     });
     if (bounds.length === 1) {
       map.setView(bounds[0], 12);

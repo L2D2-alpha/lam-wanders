@@ -110,7 +110,8 @@
     var tripEl = document.getElementById("entry-trip");
     if (trip.title) {
       tripEl.hidden = false;
-      tripEl.innerHTML = 'From the trip <a href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
+      var tripLead = Diary.isGroup(trip) ? "In " : "From the trip ";
+      tripEl.innerHTML = tripLead + '<a href="' + Diary.escapeHtml(Diary.tripHref(entry)) + '">' +
         Diary.escapeHtml(trip.title) + "</a>";
     }
 

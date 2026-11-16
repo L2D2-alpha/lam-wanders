@@ -35,7 +35,7 @@
 
   Diary.loadTrips()
     .then(function (trips) {
-      var list = Diary.sortTrips(trips).filter(function (t) { return t && t.slug; });
+      var list = Diary.sortTrips(trips).filter(function (t) { return t && t.slug && !Diary.isGroup(t); });
       if (!list.length) {
         emptyEl.hidden = false;
         tripsEl.hidden = true;
