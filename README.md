@@ -1,6 +1,6 @@
 # Lam Wanders
 
-A travel diary kept by Spring Roll.
+A diary of wandering, eating and remembering.
 
 The live site is at [l2d2-alpha.github.io/lam-wanders](https://l2d2-alpha.github.io/lam-wanders/).
 
