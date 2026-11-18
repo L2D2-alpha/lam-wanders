@@ -1018,6 +1018,71 @@ a.trip-card:hover, a.trip-card:focus-visible {
 .about-body p { margin: 0 0 0.8rem; }
 .about-body p:last-child { margin-bottom: 0; }
 
+.proverb {
+  margin: 0 0 var(--space-6);
+  padding: 0 0 var(--space-6);
+  border-bottom: 1px solid var(--line);
+  max-width: 38rem;
+}
+.proverb-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.05rem, 1.45rem + 2.6vw, 3.15rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 0.35rem;
+}
+.proverb-en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--step-1);
+  line-height: 1.35;
+  color: var(--son);
+  margin: 0 0 0.95rem;
+}
+.proverb-rule {
+  width: 2.75rem;
+  height: 2px;
+  background: var(--son);
+  margin: 0 0 1.1rem;
+}
+.proverb-meaning {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--ink-80);
+  margin: 0 0 0.7rem;
+}
+.proverb-vi {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0 0 1.45rem;
+}
+.proverb-when-label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--son);
+  margin: 0 0 0.3rem;
+}
+.proverb-when {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--step-0);
+  line-height: 1.45;
+  color: var(--ink-80);
+  margin: 0;
+}
+
 @media (max-width: 699px) {
   .hl-card { grid-template-columns: 1fr; }
   .hl-thumb { min-height: 180px; }
